@@ -190,15 +190,14 @@ You can configure the exporters using the following environment variables:
 
 **Steam Exporter:**
 
-| Variable                         | Default            | Description                                                                                             |
-| :------------------------------- | :----------------- | :------------------------------------------------------------------------------------------------------ |
-| `STEAM_EXPORTER_LOG_LEVEL`       | `INFO`             | Log level for the exporter.                                                                             |
-| `STEAM_EXPORTER_API_KEY`         | (None)             | **Required.** Your Steam API key.                                                                       |
-| `STEAM_EXPORTER_STEAM_ID`        | (None)             | **Required.** Your 64-bit Steam ID.                                                                     |
-| `STEAM_EXPORTER_PORT`            | `9099`             | Port for the metrics endpoint.                                                                          |
-| `STEAM_EXPORTER_INTERVAL`        | `60`               | Update interval in seconds.                                                                             |
-| `STEAM_EXPORTER_GAMES_JSON_PATH` | `steam_games.json` | Path to the Steam games JSON file. See [Updating the Steam Games List](#updating-the-steam-games-list). |
-| `STEAM_EXPORTER_INCLUDE_FRIENDS` | `true`             | Whether to include friends or not. Set to 'false' to gather metrics for your account only.              |
+| Variable                         | Default | Description                                                                                |
+| :------------------------------- | :------ | :----------------------------------------------------------------------------------------- |
+| `STEAM_EXPORTER_LOG_LEVEL`       | `INFO`  | Log level for the exporter.                                                                |
+| `STEAM_EXPORTER_API_KEY`         | (None)  | **Required.** Your Steam API key.                                                          |
+| `STEAM_EXPORTER_STEAM_ID`        | (None)  | **Required.** Your 64-bit Steam ID.                                                        |
+| `STEAM_EXPORTER_PORT`            | `9099`  | Port for the metrics endpoint.                                                             |
+| `STEAM_EXPORTER_INTERVAL`        | `60`    | Update interval in seconds.                                                                |
+| `STEAM_EXPORTER_INCLUDE_FRIENDS` | `true`  | Whether to include friends or not. Set to 'false' to gather metrics for your account only. |
 
 **PlayStation Exporter:**
 

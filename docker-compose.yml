@@ -8,6 +8,7 @@ services:
         UID: 1000
         GID: 1000
     container_name: steam-exporter
+    image: oregonpillow/game-exporter:steam-exporter
     restart: unless-stopped
     environment:
       STEAM_EXPORTER_LOG_LEVEL: debug
@@ -32,7 +33,7 @@ services:
       args:
         UID: 1000
         GID: 1000
-    image: playstation-exporter
+    image: oregonpillow/game-exporter:playstation-exporter
     container_name: playstation-exporter
     restart: unless-stopped
     environment:
