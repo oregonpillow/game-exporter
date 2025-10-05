@@ -1,0 +1,48 @@
+# Stage 1: Builder
+FROM python:3.12-slim-bookworm AS builder
+
+# Install uv
+RUN pip install uv
+
+# Set up the working directory
+WORKDIR /app
+
+# Create a virtual environment first
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Copy the entire project
+COPY . .
+
+# Install the package and its dependencies
+RUN uv pip install .
+
+# Stage 2: Final Image
+FROM python:3.12-slim-bookworm
+
+# Arguments for user and group IDs
+ARG UID=1000
+ARG GID=1000
+
+# Create a non-root user and group
+RUN groupadd --gid $GID appgroup && \
+    useradd --uid $UID --gid $GID --create-home appuser
+
+# Copy the virtual environment from the builder stage
+COPY --from=builder /opt/venv /opt/venv
+
+# Set the PATH to include the virtual environment's binaries
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set the working directory
+WORKDIR /app
+
+# Change ownership of /app to appuser
+RUN chown -R appuser:appgroup /app
+
+# Switch to the non-root user
+USER appuser
+
+# Entrypoint to run the Steam exporter
+ENTRYPOINT ["game-exporter", "steam"]

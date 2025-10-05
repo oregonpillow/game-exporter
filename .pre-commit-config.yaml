@@ -1,0 +1,37 @@
+repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    # uv version.
+    rev: 0.8.15
+    hooks:
+      - id: uv-lock
+      - id: uv-export
+        name: main dependencies
+        args: [--no-dev, --output-file, requirements.txt]
+      - id: uv-export
+        name: dev dependencies
+        args: [--only-group, dev, --output-file, requirements-dev.txt]
+
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff lint
+        language: system
+        entry: uv run ruff check
+        types: [python]
+        pass_filenames: true
+
+      - id: ruff-format
+        name: ruff format
+        language: system
+        entry: uv run ruff format --check
+        types: [python]
+        pass_filenames: true
+
+      - id: prettier
+        name: prettier
+        language: node
+        additional_dependencies:
+          - prettier@3.6.2
+        entry: npx prettier --check --ignore-unknown --log-level warn
+        types_or: [json, markdown, yaml]
+        pass_filenames: true

@@ -1,0 +1,47 @@
+services:
+  steam-exporter:
+    build:
+      context: .
+      no_cache: true
+      dockerfile: Dockerfile.steam
+      args:
+        UID: 1000
+        GID: 1000
+    container_name: steam-exporter
+    restart: unless-stopped
+    environment:
+      STEAM_EXPORTER_LOG_LEVEL: debug
+      STEAM_EXPORTER_API_KEY: ${STEAM_EXPORTER_API_KEY}
+      STEAM_EXPORTER_STEAM_ID: ${STEAM_EXPORTER_STEAM_ID}
+      STEAM_EXPORTER_PORT: 9099
+      STEAM_EXPORTER_INTERVAL: 60
+      STEAM_EXPORTER_GAMES_JSON_PATH: /app/steam_games.json
+      STEAM_EXPORTER_INCLUDE_FRIENDS: true
+    ports:
+      - "9099:9099"
+    env_file:
+      - .env
+    # volumes:
+    #   - ./steam_games.json:/app/steam_games.json
+
+  playstation-exporter:
+    build:
+      context: .
+      no_cache: true
+      dockerfile: Dockerfile.playstation
+      args:
+        UID: 1000
+        GID: 1000
+    image: playstation-exporter
+    container_name: playstation-exporter
+    restart: unless-stopped
+    environment:
+      PLAYSTATION_EXPORTER_NPSSO_CODE: ${PLAYSTATION_EXPORTER_NPSSO_CODE}
+      PLAYSTATION_EXPORTER_INTERVAL: 120
+      PLAYSTATION_EXPORTER_PORT: 9098
+      PLAYSTATION_EXPORTER_LOG_LEVEL: debug
+      PLAYSTATION_EXPORTER_INCLUDE_FRIENDS: true
+    ports:
+      - "9098:9098"
+    env_file:
+      - .env
