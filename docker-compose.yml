@@ -16,14 +16,11 @@ services:
       STEAM_EXPORTER_STEAM_ID: ${STEAM_EXPORTER_STEAM_ID}
       STEAM_EXPORTER_PORT: 9099
       STEAM_EXPORTER_INTERVAL: 60
-      STEAM_EXPORTER_GAMES_JSON_PATH: /app/steam_games.json
       STEAM_EXPORTER_INCLUDE_FRIENDS: true
     ports:
       - "9099:9099"
     env_file:
       - .env
-    # volumes:
-    #   - ./steam_games.json:/app/steam_games.json
 
   playstation-exporter:
     build:

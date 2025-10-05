@@ -14,10 +14,6 @@ API_KEY = os.environ.get("STEAM_EXPORTER_API_KEY")
 STEAM_ID = os.environ.get("STEAM_EXPORTER_STEAM_ID")
 PORT = int(os.environ.get("STEAM_EXPORTER_PORT", "9099"))
 INTERVAL = int(os.environ.get("STEAM_EXPORTER_INTERVAL", "60"))
-GAMES_JSON_PATH = os.environ.get(
-    "STEAM_EXPORTER_GAMES_JSON_PATH",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "steam_games.json"),
-)
 INCLUDE_FRIENDS = str(os.environ.get("STEAM_EXPORTER_INCLUDE_FRIENDS", "true").lower())
 
 logger = setup_logger(__name__, LOG_LEVEL)
@@ -27,7 +23,6 @@ logger.debug(f"Using API_KEY: '{API_KEY}'")
 logger.debug(f"Using STEAM_ID: '{STEAM_ID}'")
 logger.debug(f"Exporter will run on port: '{PORT}'")
 logger.debug(f"Update interval set to: '{INTERVAL} seconds'")
-logger.debug(f"Using GAMES_JSON_PATH: '{GAMES_JSON_PATH}'")
 logger.debug(
     f"Include friends set to: '{INCLUDE_FRIENDS}' and {'will' if INCLUDE_FRIENDS == 'true' else 'will not'} include friends"
 )

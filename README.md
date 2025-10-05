@@ -217,3 +217,9 @@ This project uses a `pre-commit` to manage pre-commit hooks. To set it up:
 - `uvx pre-commit install`
 
 Now everytime you make a commit, the configured hooks will run automatically. To force a run of all hooks on all files, use: `uvx pre-commit run -a`
+
+## Building Docker images
+
+```
+docker-compose build --no-cache steam-exporter && docker-compose build --no-cache playstation-exporter && docker push oregonpillow/game-exporter:steam-exporter && docker push oregonpillow/game-exporter:playstation-exporter
+```
