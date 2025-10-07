@@ -111,9 +111,26 @@ def update_metrics():
     account_ids = get_account_ids(API_KEY, STEAM_ID)
     players = get_player_summaries(API_KEY, account_ids)
 
+    # --- Start of new code ---
+    # Create a set of active account IDs from the current API response
+    active_account_ids = {player.get("steamid") for player in players}
+
+    # Clean up stale metrics for users who are no longer in the friend list
+    # or returned by the API.
+    # This iterates over a copy of the keys to allow removal during iteration.
+    for labels in list(PERSONA_STATE._metrics.keys()):
+        account_id = labels[2]  # account_id is the 3rd label
+        if account_id not in active_account_ids:
+            PERSONA_STATE.remove(*labels)
+            logger.debug(f"Removed stale metric for account_id: {account_id}")
+
     for player in players:
         steam_id = player.get("steamid", "N/A")
         persona_name = player.get("personaname", "N/A")
+
+        for labels in list(PERSONA_STATE._metrics.keys()):
+            if labels[2] == steam_id:  # account_id is the 3rd label
+                PERSONA_STATE.remove(*labels)
 
         game_id_val = player.get("gameid", 0)
         game_name = "N/A"
