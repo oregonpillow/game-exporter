@@ -57,6 +57,14 @@ def update_metrics(psnawp_client):
             for friend in friends_list:
                 all_account_ids[friend.account_id] = friend.online_id
 
+        for account_id, username in all_account_ids.items():
+            ONLINE_STATUS.labels(
+                username=username,
+                game_name="N/A",
+                account_id=account_id,
+                game_id="N/A",
+            ).set(0)
+
         presences = my_profile.get_presences(list(all_account_ids.keys()))
 
         for presence in presences.get("basicPresences", []):
