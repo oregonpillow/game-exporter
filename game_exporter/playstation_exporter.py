@@ -57,19 +57,28 @@ def update_metrics(psnawp_client):
             for friend in friends_list:
                 all_account_ids[friend.account_id] = friend.online_id
 
-        for account_id, username in all_account_ids.items():
-            ONLINE_STATUS.labels(
-                username=username,
-                game_name="N/A",
-                account_id=account_id,
-                game_id="N/A",
-            ).set(0)
-
         presences = my_profile.get_presences(list(all_account_ids.keys()))
+        online_users_from_api = {
+            p["accountId"] for p in presences.get("basicPresences", [])
+        }
+
+        # Set all users to offline first
+        for account_id, username in all_account_ids.items():
+            if account_id not in online_users_from_api:
+                # This user is offline. Set a generic "offline" metric for them.
+                ONLINE_STATUS.labels(
+                    username=username,
+                    game_name="Offline",
+                    account_id=account_id,
+                    game_id="N/A",
+                ).set(0)
 
         for presence in presences.get("basicPresences", []):
             account_id = presence.get("accountId")
-            username = all_account_ids[account_id]
+            username = all_account_ids.get(account_id)
+            if not username:
+                continue  # Should not happen, but good practice
+
             online_status_str = presence.get("primaryPlatformInfo", {}).get(
                 "onlineStatus"
             )
@@ -87,9 +96,9 @@ def update_metrics(psnawp_client):
 
             game_title_info_list = presence.get("gameTitleInfoList", [])
             game_name = (
-                game_title_info_list[0].get("titleName", "N/A")
+                game_title_info_list[0].get("titleName", "Not Playing")
                 if game_title_info_list
-                else "N/A"
+                else "Not Playing"
             )
 
             game_id = (
@@ -97,6 +106,10 @@ def update_metrics(psnawp_client):
                 if game_title_info_list
                 else "N/A"
             )
+
+            # Remove any old metrics for this user to prevent stale game data
+            ONLINE_STATUS.remove(username, "Offline", account_id, "N/A")
+            ONLINE_STATUS.remove(username, "Not Playing", account_id, "N/A")
 
             online_status_labels = {
                 "username": username,
